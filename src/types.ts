@@ -1,10 +1,14 @@
 export interface WhatsAppOptions {
-  headless?: boolean;
-  userDataDir?: string;
+  session?: string; // For restoring sessions
 }
 
 export interface Message {
+  id: string;
   from: string;
   text: string;
   timestamp: number;
+}
+
+export interface QRCode {
+  code: string;
 }

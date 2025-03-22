@@ -1,14 +1,15 @@
 import WhatsAppClient from '../src/client';
 
-const client = new WhatsAppClient({ headless: true });
+const client = new WhatsAppClient();
 
 client.addEventListener('qr', (event: CustomEvent) => {
-  console.log('QR Code generated. Scan it to log in:', event.detail);
+  console.log('QR Code:', event.detail.code);
+  console.log('Scan this with your WhatsApp app.');
 });
 
 client.addEventListener('ready', () => {
   console.log('WhatsApp client ready!');
-  client.sendMessage('Friend Name', 'Hello from my Bun-powered WhatsApp lib!');
+  client.sendMessage('1234567890@s.whatsapp.net', 'Hello from my Bun WhatsApp API!');
 });
 
 client.addEventListener('message', (event: CustomEvent) => {
