@@ -3,11 +3,14 @@ import type WhatsAppClient from './client';
 
 export class Auth {
   private client: WhatsAppClient;
-  private page: import('puppeteer').Page;
 
   constructor(client: WhatsAppClient) {
     this.client = client;
-    this.page = client.getPage();
+    // Don't access page here; defer to methods
+  }
+
+  private get page(): import('puppeteer').Page {
+    return this.client.getPage();
   }
 
   async checkAuthentication(): Promise<boolean> {

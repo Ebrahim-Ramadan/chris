@@ -1,9 +1,9 @@
 import * as puppeteer from 'puppeteer';
+
 import { Auth } from './auth';
 import { Messaging } from './messaging';
 import type { WhatsAppOptions } from './types';
 
-// Bun's built-in EventTarget equivalent
 class WhatsAppClient extends EventTarget {
   private browser: puppeteer.Browser | null = null;
   private page: puppeteer.Page | null = null;
@@ -14,6 +14,7 @@ class WhatsAppClient extends EventTarget {
   constructor(options: WhatsAppOptions = {}) {
     super();
     this.options = { headless: true, userDataDir: './whatsapp-session', ...options };
+    // Pass the client instance, but don't access page yet
     this.auth = new Auth(this);
     this.messaging = new Messaging(this);
   }
@@ -28,7 +29,7 @@ class WhatsAppClient extends EventTarget {
       this.browser = await puppeteer.launch({
         headless: this.options.headless,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        userDataDir: this.options.userDataDir, // Persistent session
+        userDataDir: this.options.userDataDir,
       });
       this.page = await this.browser.newPage();
       await this.page.goto('https://web.whatsapp.com', { waitUntil: 'networkidle2' });

@@ -3,11 +3,14 @@ import type { Message } from './types';
 
 export class Messaging {
   private client: WhatsAppClient;
-  private page: import('puppeteer').Page;
 
   constructor(client: WhatsAppClient) {
     this.client = client;
-    this.page = client.getPage();
+    // Don't access page here; defer to methods
+  }
+
+  private get page(): import('puppeteer').Page {
+    return this.client.getPage();
   }
 
   async sendMessage(to: string, text: string): Promise<{ success: boolean; to: string; text: string }> {
