@@ -11,6 +11,7 @@ class WhatsAppClient extends EventTarget {
     super();
     this.clientId = randomBytes(16).toString('base64');
     this.session = options.session;
+    console.log('Creating WhatsAppClient with clientId:', this.clientId);
     this.protocol = new WhatsAppProtocol('wss://web.whatsapp.com/ws');
     this.setupProtocol();
   }
@@ -24,24 +25,28 @@ class WhatsAppClient extends EventTarget {
   }
 
   async initialize(): Promise<void> {
+    console.log('Starting initialization');
     try {
       const response = await this.protocol.init();
+      console.log('Init response:', response);
       if (response.status === 401 && response.qr) {
         this.dispatchEvent(new CustomEvent('qr', { detail: { code: response.qr } }));
       } else if (response.connected) {
         this.dispatchEvent(new CustomEvent('ready'));
       }
     } catch (error) {
+      console.error('Initialization failed:', error);
       this.dispatchEvent(new CustomEvent('error', { detail: error }));
       throw error;
     }
   }
 
   private handleOpen(): void {
-    console.log('WebSocket connected');
+    console.log('WebSocket connected in client');
   }
 
   private handleMessage(data: any): void {
+    console.log('Handling message:', data);
     if (data[0] === 'Msg') {
       const msg = data[1];
       const message: Message = {
@@ -65,11 +70,12 @@ class WhatsAppClient extends EventTarget {
         id: `${tag}.${Date.now()}`,
       },
     };
+    console.log('Sending message to:', to);
     await this.protocol.send(tag, msg);
   }
 
   async disconnect(): Promise<void> {
-    this.protocol.disconnect();
+    await this.protocol.disconnect();
   }
 }
 

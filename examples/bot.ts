@@ -21,7 +21,12 @@ client.addEventListener('message', (event: CustomEvent) => {
 });
 
 client.addEventListener('error', (event: CustomEvent) => {
-  console.error('Error:', (event.detail as Error).message);
+  console.error('Error event:', (event.detail as Error).message);
 });
 
-client.initialize().catch((err) => console.error(err));
+client.addEventListener('disconnected', () => {
+  console.log('Client disconnected');
+});
+
+console.log('Starting bot...');
+client.initialize().catch((err) => console.error('Caught error:', err));
