@@ -1,0 +1,10 @@
+{
+  "name": "whatsapp-lib-bun",
+  "version": "0.1.0",
+  "description": "WhatsApp library for Bun",
+  "main": "src/client.ts",
+  "scripts": {
+    "start": "bun run src/client.ts",
+    "example": "bun run examples/bot.ts"
+  }
+}
